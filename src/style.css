@@ -1,0 +1,386 @@
+/*
+ * Copyright 2019 Maksim Khrapov
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+:root {
+  --cross: rgb(28, 134, 238);
+  --cross-bg: rgb(212, 229, 247);
+  --nought: rgb(255, 127, 0);
+
+  --page: #f2f2f7;
+  --surface: #ffffff;
+  --ink: #1c1c1e;
+  --ink-dim: #5f5f66;
+  --line: #d8d8de;
+  --bar: rgba(255, 255, 255, 0.88);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.06);
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page: #0f0f11;
+    --surface: #1c1c1f;
+    --ink: #f2f2f7;
+    --ink-dim: #a0a0a8;
+    --line: #34343a;
+    --bar: rgba(28, 28, 31, 0.88);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 6px 20px rgba(0, 0, 0, 0.35);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* ---------- navigation bar ---------- */
+
+.app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  padding: 0.6rem max(1rem, env(safe-area-inset-left)) 0.6rem max(1rem, env(safe-area-inset-right));
+  background: var(--bar);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: inherit;
+  text-decoration: none;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.tabs a {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.tabs a:hover {
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  color: var(--ink);
+}
+
+.tabs a.active {
+  background: var(--cross);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ---------- view frame ---------- */
+
+.view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 1rem max(1rem, env(safe-area-inset-left)) 2.5rem max(1rem, env(safe-area-inset-right));
+}
+
+h2 {
+  margin: 0 0 1rem;
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  margin: 2.2rem 0 0.6rem;
+  font-size: 1.15rem;
+}
+
+/* ---------- play ---------- */
+
+.play {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  /* centred in the space left over, without clipping on a short window */
+  justify-content: center;
+  justify-content: safe center;
+}
+
+.status {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: center;
+  min-height: 1.6em;
+}
+
+.board-wrap {
+  position: relative;
+  width: min(100%, 35rem, max(16rem, calc(100dvh - 15rem)));
+  aspect-ratio: 1;
+}
+
+.board {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  touch-action: manipulation;
+}
+
+.board:focus-visible {
+  outline: 3px solid var(--cross);
+  outline-offset: 3px;
+}
+
+.board.playable {
+  cursor: pointer;
+}
+
+.board.busy {
+  cursor: progress;
+}
+
+.thinking {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: 6px;
+}
+
+.thinking[hidden] {
+  display: none;
+}
+
+.spinner {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 4px solid rgba(0, 0, 0, 0.18);
+  border-top-color: var(--cross);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 3s;
+  }
+}
+
+.controls {
+  display: flex;
+  gap: 0.75rem;
+  width: min(100%, 35rem);
+}
+
+/* ---------- buttons ---------- */
+
+.btn {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--cross);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--cross) 8%, var(--surface));
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn:disabled {
+  color: var(--ink-dim);
+  cursor: default;
+  opacity: 0.55;
+}
+
+.btn.primary {
+  background: var(--cross);
+  border-color: var(--cross);
+  color: #fff;
+}
+
+.btn.primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--cross) 85%, #000);
+}
+
+/* ---------- abandon game dialog ---------- */
+
+dialog.confirm {
+  width: min(22rem, calc(100vw - 2rem));
+  padding: 1.25rem;
+  border: none;
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+
+dialog.confirm::backdrop {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+dialog.confirm h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.2rem;
+}
+
+dialog.confirm p {
+  margin: 0 0 1.1rem;
+  color: var(--ink-dim);
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* ---------- settings ---------- */
+
+.field {
+  margin: 0 0 1.6rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.field legend {
+  padding: 0 0.4rem;
+  color: var(--ink-dim);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.segmented {
+  display: flex;
+  padding: 2px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+.segmented button {
+  flex: 1;
+  padding: 0.5rem 0.4rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.segmented button.selected {
+  background: var(--surface);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+  font-weight: 600;
+}
+
+.explanation {
+  margin: 0.9rem 0 0;
+  color: var(--ink-dim);
+}
+
+.note {
+  color: var(--ink-dim);
+  font-size: 0.92rem;
+}
+
+/* ---------- rules ---------- */
+
+.rules p {
+  margin: 1rem 0;
+}
+
+.rules a {
+  color: var(--cross);
+}
+
+.rules figure {
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+.rules img {
+  width: min(100%, 22rem);
+  height: auto;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.rules figcaption {
+  margin-top: 0.5rem;
+  color: var(--ink-dim);
+  font-size: 0.9rem;
+}

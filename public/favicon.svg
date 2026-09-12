@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="TicTacToe Ultimatum">
+  <rect width="64" height="64" rx="12" fill="#ffffff"/>
+  <g stroke="#8e8e93" stroke-width="2" stroke-linecap="round">
+    <path d="M24 8v48M40 8v48M8 24h48M8 40h48"/>
+  </g>
+  <g stroke="#1c86ee" stroke-width="6" stroke-linecap="round">
+    <path d="M13 13l10 10M23 13L13 23"/>
+    <path d="M45 45l10 10M55 45L45 55"/>
+  </g>
+  <circle cx="32" cy="32" r="7" fill="none" stroke="#ff7f00" stroke-width="6"/>
+</svg>

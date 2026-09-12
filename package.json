@@ -1,0 +1,22 @@
+{
+  "name": "tictactoe-ultimatum",
+  "version": "1.0.0",
+  "description": "Ultimate Tic-Tac-Toe as a static single page web application",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "bench": "vite-node bench/mcts.bench.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "vite": "^7.1.5",
+    "vitest": "^3.2.4"
+  }
+}
