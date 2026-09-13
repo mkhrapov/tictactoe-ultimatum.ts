@@ -36,6 +36,27 @@ npm run preview    # serve the built site
 npm run bench      # time the search at its heaviest
 ```
 
+`npm install` comes first, and not only the first time: `tsc` and `vite` live in
+`node_modules/.bin`, so without it the build stops at `tsc: command not found`.
+
+### Install scripts
+
+Nothing here needs a dependency's install script to run, so
+`npm install --ignore-scripts` works just as well and is the safer habit. Recent
+versions of npm block install scripts by default and say so:
+
+```
+npm warn install-scripts 2 packages had install scripts blocked because they are
+npm warn install-scripts not covered by allowScripts
+```
+
+That warning needs no action. Two packages ask for a script and neither matters
+here: esbuild ships its platform binary as an optional dependency, so its
+`postinstall` is only a check and a small start-up saving, and `fsevents` is an
+optional macOS file-watching accelerator — without it the dev server watches by
+polling, which costs a little hot-reload latency and nothing else. Both the build
+and the test suite are verified to pass with every install script blocked.
+
 `npm run build` writes `dist/`. Asset URLs in the build are relative, so the
 folder works unchanged at a domain root, in a subdirectory, or on GitHub Pages
 under `/<repo>/`. Serve it with any static file server; no rewrite rules are
