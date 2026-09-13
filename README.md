@@ -57,9 +57,33 @@ optional macOS file-watching accelerator — without it the dev server watches b
 polling, which costs a little hot-reload latency and nothing else. Both the build
 and the test suite are verified to pass with every install script blocked.
 
-`npm run build` writes `dist/`. Asset URLs in the build are relative, so the
-folder works unchanged at a domain root, in a subdirectory, or on GitHub Pages
-under `/<repo>/`. Serve it with any static file server; no rewrite rules are
+### The built site
+
+`npm run build` writes `dist/`:
+
+```
+dist/
+  tictactoe-ultimatum.html                 the page to link to
+  assets/tictactoe-ultimatum-<hash>.js     the app
+  assets/tictactoe-ultimatum-<hash>.css
+  assets/worker-<hash>.js                  the AI, off the main thread
+  favicon.svg  icon-180.png  icon-1024.png  manifest.webmanifest
+  rules/img/step1.png … step8.png
+```
+
+**The entry page is `tictactoe-ultimatum.html`, not `index.html`**, for hosts
+that do not serve pages by that name. Nothing in the output is called
+`index.html`, so a bare directory URL has nothing to answer with: link to the
+page by name. That includes GitHub Pages, where the site lives at
+`/<repo>/tictactoe-ultimatum.html` and the repository root will 404. The entry
+is named in `build.rollupOptions.input` in `vite.config.ts`; change it there and
+the page, the JavaScript and the CSS all follow.
+
+Locally this is papered over: `npm run dev` and `npm run preview` both serve the
+entry page at `/` as well, so the URL Vite prints works as it always did.
+
+Asset URLs are relative, so the folder works unchanged at a domain root or in
+any subdirectory. Serve it with any static file server; no rewrite rules are
 needed, because routing happens in the URL fragment (`#/play`, `#/settings`,
 `#/rules`).
 

@@ -2,7 +2,7 @@
   "name": "TicTacToe Ultimatum",
   "short_name": "Ultimatum",
   "description": "Ultimate Tic-Tac-Toe in the browser, against a friend or a Monte Carlo AI.",
-  "start_url": "./",
+  "start_url": "./tictactoe-ultimatum.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",

@@ -3,6 +3,10 @@
 # Enable Pages for the repository first (Settings -> Pages -> Source: GitHub
 # Actions), then run this workflow from the Actions tab. To publish on every
 # push instead, add a `push: branches: [main]` trigger below.
+#
+# The entry page is tictactoe-ultimatum.html, not index.html, so the published
+# site is at https://<owner>.github.io/<repo>/tictactoe-ultimatum.html and the
+# repository root will 404. See "The built site" in the README.
 name: Deploy to GitHub Pages
 
 on:
