@@ -74,22 +74,17 @@ dist/
 **The entry page is `tictactoe-ultimatum.html`, not `index.html`**, for hosts
 that do not serve pages by that name. Nothing in the output is called
 `index.html`, so a bare directory URL has nothing to answer with: link to the
-page by name. That includes GitHub Pages, where the site lives at
-`/<repo>/tictactoe-ultimatum.html` and the repository root will 404. The entry
-is named in `build.rollupOptions.input` in `vite.config.ts`; change it there and
-the page, the JavaScript and the CSS all follow.
+page by name. The entry is named in `build.rollupOptions.input` in
+`vite.config.ts`; change it there and the page, the JavaScript and the CSS all
+follow.
 
 Locally this is papered over: `npm run dev` and `npm run preview` both serve the
 entry page at `/` as well, so the URL Vite prints works as it always did.
 
 Asset URLs are relative, so the folder works unchanged at a domain root or in
-any subdirectory. Serve it with any static file server; no rewrite rules are
-needed, because routing happens in the URL fragment (`#/play`, `#/settings`,
-`#/rules`).
-
-To publish it on GitHub Pages: enable Pages for the repository (Settings →
-Pages → Source: GitHub Actions), then run the **Deploy to GitHub Pages**
-workflow from the Actions tab.
+any subdirectory. Copy `dist/` to any static host; no rewrite rules and no
+server-side configuration are needed, because routing happens in the URL
+fragment (`#/play`, `#/settings`, `#/rules`).
 
 ## How it is put together
 

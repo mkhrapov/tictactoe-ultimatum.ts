@@ -31,8 +31,8 @@ function serveEntryAtRoot(): Plugin {
   };
 }
 
-// Relative asset URLs so the built site can be dropped into any directory,
-// including a GitHub Pages project path, without rebuilding.
+// Relative asset URLs so the built site can be dropped into any directory of any
+// static host, at a domain root or in a subdirectory, without rebuilding.
 export default defineConfig({
   base: './',
   plugins: [serveEntryAtRoot()],
